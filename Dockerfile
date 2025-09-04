@@ -39,10 +39,10 @@ WORKDIR /usr/src/nginx
 RUN set -ex \
   && export CONFARGS=$(nginx -V 2>&1 | sed -n -e 's/^.*arguments: //p') \
   && eval ./configure --with-compat $CONFARGS --add-dynamic-module=/usr/src/ngx_http_substitutions_filter_module \
-  && make && make install
+  && make modules
 
 FROM nginx:alpine
-COPY --from=builder /usr/lib/nginx/modules/ngx_http_subs_filter_module.so /usr/lib/nginx/modules/ngx_http_subs_filter_module.so
+COPY --from=builder /usr/src/nginx/objs/ngx_http_subs_filter_module.so /usr/lib/nginx/modules/ngx_http_subs_filter_module.so
 
 RUN set -ex \
-  && sed -i '1iload_module /usr/lib/nginx/modules/ngx_http_subs_filter_module.so;' /etc/nginx/nginx.conf
+  && sed -i '1iload_module modules/ngx_http_subs_filter_module.so;' /etc/nginx/nginx.conf
