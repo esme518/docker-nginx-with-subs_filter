@@ -2,7 +2,7 @@
 # Dockerfile for nginx-with-subs_filter
 #
 
-FROM nginx:alpine-slim as builder
+FROM nginx:stable-alpine-slim as builder
 
 RUN set -ex \
   && apk add --no-cache --virtual .build-deps \
@@ -41,7 +41,7 @@ RUN set -ex \
   && eval ./configure --with-compat $CONFARGS --add-dynamic-module=/usr/src/ngx_http_substitutions_filter_module \
   && make modules
 
-FROM nginx:alpine
+FROM nginx:stable-alpine
 COPY --from=builder /usr/src/nginx/objs/ngx_http_subs_filter_module.so /usr/lib/nginx/modules/ngx_http_subs_filter_module.so
 
 RUN set -ex \
