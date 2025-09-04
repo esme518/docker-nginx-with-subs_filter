@@ -17,6 +17,14 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  workflow-keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
+
   build-arm64-image:
 
     runs-on: ubuntu-24.04-arm
